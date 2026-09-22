@@ -1,0 +1,6 @@
+services:
+  frontend:
+    build: .
+    container_name: WoningMatch_Frontend
+    ports:
+      - "4200:80"
