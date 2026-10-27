@@ -18,12 +18,11 @@ function Login() {
         setLoading(true);
 
         try {
-            const user = await accountService.login({
+            await accountService.login({
                 email,
                 password
             });
-
-            setSuccess(`Welkom terug, ${user.name}!`);
+            setSuccess(`Welkom terug!`);
         } catch (err: unknown) {
             if (isAxiosError(err)) {
                 console.error("Login fout:", err.response?.status);

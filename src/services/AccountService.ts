@@ -1,27 +1,29 @@
-
 import api from "../axiosConfig";
 import type { RegisterDTO } from "../contracts/Account/RegisterDTO";
 import type { LoginDTO } from "../contracts/Account/LoginDTO";
 
-export type UserResponse = {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-};
-
 export class AccountService {
+
     async register(account: RegisterDTO): Promise<void> {
-        await api.post("/api/auth/register", account);
+
+        const csrfResponse = await api.get<string>("/api/auth/csrf");
+
+        await api.post("/api/auth/register", account, {
+            headers: {
+                "X-XSRF-TOKEN": csrfResponse.data
+            }
+        });
     }
 
-    async login(account: LoginDTO): Promise<UserResponse> {
-        const response = await api.post<UserResponse>(
-            "/api/auth/login",
-            account
-        );
+    async login(account: LoginDTO): Promise<void> {
 
-        return response.data;
+        const csrfResponse = await api.get<string>("/api/auth/csrf");
+
+        await api.post("/api/auth/login", account, {
+            headers: {
+                "X-XSRF-TOKEN": csrfResponse.data
+            }
+        });
     }
 }
 
