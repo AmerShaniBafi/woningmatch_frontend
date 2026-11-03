@@ -1,8 +1,8 @@
 
 import { useState, type FormEvent } from "react";
 import { isAxiosError } from "axios";
-import { accountService } from "../../services/AccountService";
 import "./Login.css";
+import { useAuth } from "../../authorization/userAuth";
 
 type LoginProps = {
     onRegister: () => void;
@@ -15,6 +15,7 @@ function Login({ onRegister }: LoginProps) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -23,8 +24,7 @@ function Login({ onRegister }: LoginProps) {
         setLoading(true);
 
         try {
-            await accountService.login({ email, password });
-            setSuccess("Je bent succesvol ingelogd. Welkom terug!");
+            await login(email, password);
         } catch (err: unknown) {
             if (isAxiosError(err)) {
                 setError(
